@@ -45,12 +45,18 @@
   },
   "postcss": {
     "plugins": {
-      "autoprefixer": {}
+      "autoprefixer": {},
+      "postcss-pxtorem": {
+        "rootValue": 16,
+        "propList": ["*"]
+      }
     }
   },
   "browserslist": [
     "> 1%",
     "last 2 versions",
-    "not ie <= 8"
+    "not ie <= 8",
+    "Android >= 4.0",
+    "iOS >= 7"
   ]
 }

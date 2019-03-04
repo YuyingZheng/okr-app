@@ -7,13 +7,11 @@ function resolve(dir) {
 }
 
 module.exports = {
-  plugins: {
-    'autoprefixer': {
-      browsers: ['Android >= 4.0', 'iOS >= 7']
-    },
-    'postcss-pxtorem': {
-      rootValue: 37.5,
-      propList: ['*']
-    }
+  // webpack.config
+  configureWebpack: config => {
+    config.resolve.alias['assets'] = resolve('src/assets')
+    config.resolve.alias['components'] = resolve('src/components')
+    config.resolve.alias['sass'] = resolve('src/sass')
+    config.resolve.alias['views'] = resolve('src/views')
   }
 }
