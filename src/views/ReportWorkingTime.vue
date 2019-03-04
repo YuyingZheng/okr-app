@@ -60,6 +60,12 @@
 
       <Button size="large" @click="add">+ 增加报工</Button>
     </div>
+
+    <!-- <nav-bar
+      title="待办事项"
+      :z-index="1"
+      >
+    </nav-bar> -->
   </div>
 </template>
 <script>
