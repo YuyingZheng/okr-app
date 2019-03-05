@@ -22,9 +22,17 @@
          v-for="(item, index) in totalProjectReport"
          :key="index"
          >
-        <h4 class="itemTitle">
-          项目报工<i class="num">{{ index + 1 }}</i>
-        </h4>
+          <div class="itemTitleWrap">
+            <h4 class="itemTitle">
+              项目报工<i class="num">{{ index + 1 }}</i>
+            </h4>
+            <Button
+              v-if="index!== 0"
+              class="textBlue delete"
+              @click="removeProjectItem(index)">
+              删除
+            </Button>
+          </div>
         <cell-group>
           <Cell title="项目/产品名称" is-link :value="item.selectedProject" @click="showPopup('projectList', index)"></Cell>
           <field v-model="item.workigHour" type="number" label="报工时长"></field>
@@ -58,14 +66,19 @@
         </popup>
       </div>
 
-      <Button size="large" @click="add">+ 增加报工</Button>
+      <Button size="large" @click="add" class="textBlue">+ 增加报工</Button>
     </div>
 
-    <!-- <nav-bar
-      title="待办事项"
-      :z-index="1"
-      >
-    </nav-bar> -->
+    <div class="fixed-toolbar">
+      <div class="sumWorkingHourWrap">
+        <div class="sumWorkingHour">
+          <label>今日汇总工时</label>
+          <span class="time">{{ sumWorkingHour }}</span>
+          <label>h</label>
+        </div>
+        <Button type="info">完成今日报工</Button>
+      </div>
+    </div>
   </div>
 </template>
 <script>
@@ -140,14 +153,13 @@ export default {
 
   methods: {
     onClickLeft () {
-      console.log('111')
+      console.log('back to last page')
     },
 
     showPopup (type, index) {
       this.show = true
       this.showType = type
       this.popIndex = index
-      console.log(type, this.showType)
     },
 
     hidePopup () {
@@ -159,7 +171,6 @@ export default {
     },
 
     confirm (value, index) {
-      console.log(value)
       if (this.showType === 'projectList') {
         this.totalProjectReport[this.popIndex].selectedProject = value.text
       }
@@ -169,7 +180,20 @@ export default {
     add () {
       let projectItem = Object.assign({}, this.initProjectReport)
       this.totalProjectReport.push(projectItem)
-      console.log(this.totalProjectReport)
+    },
+
+    removeProjectItem (index) {
+      this.totalProjectReport.splice(index, 1)
+    }
+  },
+
+  computed: {
+    sumWorkingHour () {
+      let sumTemp = 0
+      this.totalProjectReport.forEach(item => {
+        sumTemp = sumTemp + Number(item.workigHour)
+      })
+      return sumTemp
     }
   }
 }
@@ -201,10 +225,16 @@ export default {
 
   .pageContent {
     padding-top: 2.875rem;
+    padding-bottom: 2.875rem;
   }
 
   .van-cell__title {
     text-align: left;
+  }
+
+  .itemTitleWrap {
+    display: flex;
+    justify-content: space-between;
   }
 
   .itemTitle {
@@ -227,7 +257,46 @@ export default {
     }
   }
 
+  .delete {
+    border: none;
+  }
+
   .van-field__control {
     text-align: right;
+  }
+
+  .textLeft {
+    .van-field__control {
+      text-align: left;
+    }
+  }
+
+  .sumWorkingHourWrap {
+    display: flex;
+    justify-content: space-between;
+    box-shadow: 0 0 0.05rem rgba(0,0,0,.1);
+  }
+
+  .sumWorkingHour {
+    display: flex;
+    align-items: center;
+    padding-left: 5px;
+
+    .time {
+      margin-left: 6px;
+      margin-right: 6px;
+      color: #4c84ff;
+    }
+  }
+
+  .fixed-toolbar {
+    background: #fff;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+  }
+
+  .textBlue {
+    color: #4c84ff;
   }
 </style>
