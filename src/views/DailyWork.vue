@@ -35,8 +35,8 @@
           </div>
         <cell-group>
           <Cell title="项目/产品名称" is-link :value="item.selectedProject" @click="showPopup('projectList', index)"></Cell>
-          <field v-model="item.workigHour" type="number" label="报工时长"></field>
-          <field v-model="item.comment" label="备注信息" rows="1" type="textarea" autosize></field>
+          <field v-model="item.duration" type="number" label="报工时长"></field>
+          <field v-model="item.remark" label="备注信息" rows="1" type="textarea" autosize></field>
         </cell-group>
 
         <popup
@@ -54,7 +54,7 @@
 
           <picker
             v-if="showType === 'projectList'"
-            :columns="item.projectList"
+            :columns="projectList"
             title="项目/产品名称"
             :show-toolbar="true"
             :visible-item-count="6"
@@ -76,12 +76,13 @@
           <span class="time">{{ sumWorkingHour }}</span>
           <label>h</label>
         </div>
-        <Button type="info">完成今日报工</Button>
+        <Button type="info" @click="submit">完成今日报工</Button>
       </div>
     </div>
   </div>
 </template>
 <script>
+import Vue from 'vue'
 import { NavBar, Popup, Cell, CellGroup, DatetimePicker, Picker, Field, Button } from 'vant'
 
 export default {
@@ -104,48 +105,33 @@ export default {
       showType: '',
       selectedTime: new Date(),
       popIndex: '',
+      projectList: [
+        { text: '项目/产品名称1' },
+        { text: '项目/产品名称2' },
+        { text: '项目/产品名称3' },
+        { text: '项目/产品名称4' },
+        { text: '项目/产品名称5' },
+        { text: '项目/产品名称6' },
+        { text: '项目/产品名称7' }
+      ],
       initProjectReport: {
         selectedProject: '项目/产品名称1',
-        projectList: [
-          { text: '项目/产品名称1' },
-          { text: '项目/产品名称2' },
-          { text: '项目/产品名称3' },
-          { text: '项目/产品名称4' },
-          { text: '项目/产品名称5' },
-          { text: '项目/产品名称6' },
-          { text: '项目/产品名称7' }
-        ],
-        workigHour: 4.0,
-        comment: ''
+        duration: 4.0,
+        remark: '',
+        reportDay: ''
       },
       totalProjectReport: [
         {
           selectedProject: '项目/产品名称1',
-          projectList: [
-            { text: '项目/产品名称1' },
-            { text: '项目/产品名称2' },
-            { text: '项目/产品名称3' },
-            { text: '项目/产品名称4' },
-            { text: '项目/产品名称5' },
-            { text: '项目/产品名称6' },
-            { text: '项目/产品名称7' }
-          ],
-          workigHour: 4.0,
-          comment: ''
+          duration: 4.0,
+          remark: '',
+          reportDay: ''
         },
         {
           selectedProject: '项目/产品名称1',
-          projectList: [
-            { text: '项目/产品名称1' },
-            { text: '项目/产品名称2' },
-            { text: '项目/产品名称3' },
-            { text: '项目/产品名称4' },
-            { text: '项目/产品名称5' },
-            { text: '项目/产品名称6' },
-            { text: '项目/产品名称7' }
-          ],
-          workigHour: 4.0,
-          comment: ''
+          duration: 4.0,
+          remark: '',
+          reportDay: ''
         }
       ]
     }
@@ -184,6 +170,16 @@ export default {
 
     removeProjectItem (index) {
       this.totalProjectReport.splice(index, 1)
+    },
+
+    submit () {
+      this.totalProjectReport.forEach(item => {
+        item.reportDay = this.selectedTime.toLocaleDateString()
+      })
+
+      Vue.api.dailyWork.saveTask(this.totalProjectReport).then(res => {
+        console.log('save succesfully!')
+      })
     }
   },
 
@@ -191,10 +187,16 @@ export default {
     sumWorkingHour () {
       let sumTemp = 0
       this.totalProjectReport.forEach(item => {
-        sumTemp = sumTemp + Number(item.workigHour)
+        sumTemp = sumTemp + Number(item.duration)
       })
       return sumTemp
     }
+  },
+
+  mounted () {
+    Vue.api.dailyWork.queryTaskListByPage().then(res => {
+      console.log('dailyWork.queryTaskListByPage')
+    })
   }
 }
 </script>

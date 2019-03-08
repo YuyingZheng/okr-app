@@ -4,6 +4,13 @@ export default function (instance) {
       return instance
         .post('/api/daily/saveDailyList.json', taskArray)
         .then(response => response.data)
+    },
+
+    queryTaskListByPage () {
+      return instance
+        .post('/task/getTaskListByPage.json', {
+          pageSize: 100
+        })
     }
   }
 }

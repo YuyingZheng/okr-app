@@ -1,5 +1,5 @@
-import reportWork from './reportWork.js'
+import dailyWork from './dailyWork.js'
 
 export default {
-  reportWork
+  dailyWork
 }
