@@ -28,6 +28,14 @@ export default new Router({
       // this generates a separate chunk (reportWorkingTime.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
       component: () => import(/* webpackChunkName: "ReportWorkingTime" */ './views/DailyWork.vue')
+    },
+    {
+      path: '/Login',
+      name: 'Login',
+      // route level code-splitting
+      // this generates a separate chunk (reportWorkingTime.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import(/* webpackChunkName: "ReportWorkingTime" */ './views/Login.vue')
     }
   ]
 })
